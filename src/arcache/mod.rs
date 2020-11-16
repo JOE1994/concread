@@ -164,8 +164,8 @@ where
     stats: CowCell<CacheStats>,
 }
 
-unsafe impl<K: Hash + Eq + Ord + Clone + Debug, V: Clone + Debug> Send for ARCache<K, V> {}
-unsafe impl<K: Hash + Eq + Ord + Clone + Debug, V: Clone + Debug> Sync for ARCache<K, V> {}
+unsafe impl<K: Hash + Eq + Ord + Clone + Debug + Send + 'static, V: Clone + Debug + Send + 'static> Send for ARCache<K, V> {}
+unsafe impl<K: Hash + Eq + Ord + Clone + Debug + Send + 'static, V: Clone + Debug + Send + 'static> Sync for ARCache<K, V> {}
 
 struct ReadCache<K, V>
 where
@@ -196,8 +196,17 @@ where
     ts: Instant,
 }
 
-unsafe impl<K: Hash + Eq + Ord + Clone + Debug, V: Clone + Debug> Send for ARCacheReadTxn<'_, K, V> {}
-unsafe impl<K: Hash + Eq + Ord + Clone + Debug, V: Clone + Debug> Sync for ARCacheReadTxn<'_, K, V> {}
+unsafe impl<
+    K: Hash + Eq + Ord + Clone + Debug + Send + 'static,
+    V: Clone + Debug + Send + 'static
+    > Send
+    for ARCacheReadTxn<'_, K, V>
+{
+}
+unsafe impl<K: Hash + Eq + Ord + Clone + Debug + Send + 'static, V: Clone + Debug + Send + 'static> Sync
+    for ARCacheReadTxn<'_, K, V>
+{
+}
 
 /// An active write transaction over the cache. The data in this cache is isolated
 /// from readers, and may be rolled-back if an error occurs. Changes only become

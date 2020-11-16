@@ -58,8 +58,8 @@ where
     key2: u128,
 }
 
-unsafe impl<K: Hash + Eq + Clone + Debug, V: Clone> Send for HashMap<K, V> {}
-unsafe impl<K: Hash + Eq + Clone + Debug, V: Clone> Sync for HashMap<K, V> {}
+unsafe impl<K: Hash + Eq + Clone + Debug + Send + 'static, V: Clone + Send + 'static> Send for HashMap<K, V> {}
+unsafe impl<K: Hash + Eq + Clone + Debug + Send + 'static, V: Clone + Send + 'static> Sync for HashMap<K, V> {}
 
 /// An active read transaction over a `HashMap`. The data in this tree
 /// is guaranteed to not change and will remain consistent for the life

@@ -46,8 +46,8 @@ where
     active: Mutex<Arc<SuperBlock<K, V>>>,
 }
 
-unsafe impl<K: Clone + Ord + Debug, V: Clone> Send for BptreeMap<K, V> {}
-unsafe impl<K: Clone + Ord + Debug, V: Clone> Sync for BptreeMap<K, V> {}
+unsafe impl<K: Clone + Ord + Debug + Send + 'static, V: Clone + Send + 'static> Send for BptreeMap<K, V> {}
+unsafe impl<K: Clone + Ord + Debug + Send + 'static, V: Clone + Send + 'static> Sync for BptreeMap<K, V> {}
 
 /// An active read transaction over a `BptreeMap`. The data in this tree
 /// is guaranteed to not change and will remain consistent for the life
